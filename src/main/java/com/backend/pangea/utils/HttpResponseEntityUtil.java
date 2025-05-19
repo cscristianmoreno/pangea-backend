@@ -10,14 +10,14 @@ public abstract class HttpResponseEntityUtil  {
         return sendMessage(body, HttpStatus.OK);
     }
 
-    public static <T> ResponseEntity<HttpResponseEntity<T>> unauthorized(String message) {
-        return sendMessage((T) message, HttpStatus.UNAUTHORIZED);
+    public static ResponseEntity<HttpResponseEntity<Object>> unauthorized(String message) {
+        return sendMessage(message, HttpStatus.UNAUTHORIZED);
     }
 
     private static <T> ResponseEntity<HttpResponseEntity<T>> sendMessage(T result, HttpStatus status) {
         HttpResponseEntity<T> response = new HttpResponseEntity<>();
         response.setResult(result);
-        response.setStatus(HttpStatus.OK);
+        response.setStatus(status);
         return new ResponseEntity<HttpResponseEntity<T>>(response, status);
     }
 }
