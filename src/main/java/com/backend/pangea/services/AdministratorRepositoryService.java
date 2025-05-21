@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.backend.pangea.entity.Administrators;
 import com.backend.pangea.models.services.IAdministratorRepositoryService;
-import com.backend.pangea.repository.AdministaroRepository;
+import com.backend.pangea.repository.AdministratorRepository;
 
 @Service
 public class AdministratorRepositoryService implements IAdministratorRepositoryService {
 
-    private final AdministaroRepository administaroRepository;
+    private final AdministratorRepository administaroRepository;
 
-    public AdministratorRepositoryService(final AdministaroRepository administaroRepository) {
+    public AdministratorRepositoryService(final AdministratorRepository administaroRepository) {
         this.administaroRepository = administaroRepository;
     }
 

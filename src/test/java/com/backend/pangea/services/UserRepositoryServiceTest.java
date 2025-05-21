@@ -42,9 +42,8 @@ public class UserRepositoryServiceTest {
 
     @Test
     void testSave() {
-        Administrators administrator = new Administrators();
-        user.setAdministrator(administrator);
         Users result = userRepositoryService.save(user);
+        System.out.println(result.getPassword());
         assertNotNull(result);
     }
 

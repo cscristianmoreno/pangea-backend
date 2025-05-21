@@ -7,6 +7,6 @@ import com.backend.pangea.entity.Administrators;
 import com.backend.pangea.models.ICrudRepository;
 
 @JPARepository
-public interface AdministaroRepository extends ICrudRepository<Administrators>, CrudRepository<Administrators, Integer> {
+public interface AdministratorRepository extends ICrudRepository<Administrators>, CrudRepository<Administrators, Integer> {
     
 }

@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.backend.pangea.dto.HttpResponseEntity;
 import com.backend.pangea.entity.Administrators;
@@ -11,6 +14,9 @@ import com.backend.pangea.models.controllers.administrators.IAdministratorContro
 import com.backend.pangea.services.AdministratorRepositoryService;
 import com.backend.pangea.utils.HttpResponseEntityUtil;
 
+@Controller
+@ResponseBody
+@RequestMapping("/administrators")
 public class AdministratorController implements IAdministratorController {
 
     private final AdministratorRepositoryService administratorRepositoryService;

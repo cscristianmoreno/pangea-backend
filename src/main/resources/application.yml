@@ -20,4 +20,5 @@ spring:
         - classpath:sql/initializer.sql
         - classpath:sql/tables/tables.sql
         - classpath:sql/triggers/insert-role-after-user.sql
+        - classpath:sql/mocks/mocks.sql
       # continue-on-error: true
