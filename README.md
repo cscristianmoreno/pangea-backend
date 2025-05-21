@@ -12,6 +12,7 @@
 <p>Los scripts se ejecutan vía SQL</p>
 <p>el script <b>initializer.sql</b> re-crea todo, eliminando así el schema y sus tablas</p>
 
-### SEGURIDAD
+### ÚLTIMO FIX
 
-La seguridad está hecha pero sin funcionar (Hasta ver que se hace)
+* Arreglado nombre de clases en repositorio, añadido mock de administrador a la DB
+
