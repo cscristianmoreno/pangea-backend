@@ -1,0 +1,10 @@
+name: "Main workflow"
+
+on:
+  push:
+    branches: [production]
+
+jobs:
+  main:
+    name: Run build worlfkow...
+    uses: ./.github/workflows/build.yml

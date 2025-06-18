@@ -1,0 +1,37 @@
+version: "2"
+
+services:
+  service-db:
+    container_name: service-db
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USERNAME: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - 5432:5432
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}'"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  service-backend:
+    container_name: service-backend
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      service-db:
+        required: true
+        condition: service_healthy
+    
+volumes:
+  db_volume:
