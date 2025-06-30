@@ -26,8 +26,8 @@ spring:
         - classpath:sql/triggers/insert-role-after-user.sql
         # - classpath:sql/mocks/mocks.sql
       # continue-on-error: true
-  profiles:
-    active: gh-action
+  # profiles:
+  #   active: gh-action
 management:
   endpoints:
     web:

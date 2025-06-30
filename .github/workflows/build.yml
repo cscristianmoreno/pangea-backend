@@ -3,6 +3,9 @@ name: Build app
 on:
   workflow_call:
 
+env:
+  artifact_name: artifact
+
 jobs:
   build-app:
     runs-on: ubuntu-latest
@@ -41,11 +44,62 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_DATABASE: ${{ secrets.DB_DATABASE }}
           spring.profiles.active: gh-action
+      - name: Upload artifact...
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.artifact_name }}
+          path: |
+            target/pangea.jar
+
+  download-artifact-and-ec2-upload:
+    runs-on: ubuntu-latest
+    needs: [build-app]
+    steps:
+      - name: Download artifact...
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.artifact_name }}
+          path: app
+      - name: Success message...
+        run: |
+          echo "Artifact ${{ env.artifact_name }} has been downloaded!"
+          echo "${{ secrets.EC2_PEM }}" > ${{ secrets.EC2_PEM_FILE }}
+      - name: Sending to ec2...
+        run: |
+          chmod 400 "${{ secrets.EC2_PEM_FILE }}"
+          scp -o StrictHostKeyChecking=accept-new -i ${{ secrets.EC2_PEM_FILE }} app/pangea.jar ${{ secrets.EC2_INSTANCE_CONNECTION }}:pangea.jar
+      - name: View server health
+        id: health-app
+        continue-on-error: true
+        run: |
+          http_status=$(curl -X GET -w "%{http_code}\n" -o /dev/null -s ${{ secrets.EC2_ACTUATOR_HEALTH }})
+          echo "http_status=$http_status" >> $GITHUB_ENV
+          echo "::set-output name=http_status::$http_status"
+      - if: ${{ steps.health-app.outputs.http_status == null }}
+        name: Connecting to EC2...
+        run: |
+          chmod 400 "${{ secrets.EC2_PEM_FILE }}"
+          ssh -i ${{ secrets.EC2_PEM_FILE }} ${{ secrets.EC2_INSTANCE_CONNECTION}} << EOF
+            export DB_URL=${{ secrets.DB_URL }}
+            export DB_USERNAME=${{ secrets.DB_USERNAME }}
+            export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            export DB_DATABASE=${{ secrets.DB_DATABASE }}
+            sudo apt-get clean
+            sudo apt-get update -y
+            sudo apt-get upgrade -y
+            sudo apt-get install openjdk-21-jre-headless -y
+            sudo apt-get install postgres
+            java -jar pangea.jar
+            exit
+          EOF
       - name: Success...
         run: |
-          echo "Workflow success..."
+          echo "JAR has been uploaded successfully..."
+        
+        
+      
 
-
+          
           
   
       
